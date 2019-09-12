@@ -1,0 +1,41 @@
+:root {
+    --touchPoint-color: red;
+    --touchpoint-size: 20px;
+    --clusterCircle-color: green;
+    --circular: 50%;
+    --lineColor: black;
+}
+
+body {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.data-display-wrapper {
+    width: 100%;
+    margin: 0;
+    height: 15%;
+}
+
+.touchpoint {
+    background-color: var(--touchPoint-color);
+    width: var(--touchpoint-size);
+    height: var(--touchpoint-size);
+    border-radius: var(--circular);
+    position: absolute;
+    display: none;
+}
+
+.cluster-circle-element {
+    border: 2px solid var(--clusterCircle-color);
+    border-radius: var(--circular);
+    position: absolute;
+}
+
+.connecting-line {
+    position: absolute;
+    height: 1px;
+    background-color: var(--lineColor);
+    transform-origin: bottom left;
+}
