@@ -208,13 +208,13 @@ function findClusterCenter(totalClusters) {
     if (clusters.length > 0) {
         clusters.forEach(cluster => {
             document.getElementById('touch-area').removeChild(cluster.circleElement);
-            // cluster.lines.forEach(line => document.getElementById('touch-area').removeChild(line));
+            cluster.lines.forEach(line => document.getElementById('touch-area').removeChild(line));
         });
     }
 
     clusters = totalClusters;
     highlightClusters(clusters);
-    //connectClustersWithLines(clusters);
+    connectClustersWithLines(clusters);
     if (state === NORMAL) {
         clusters.forEach(cluster => decomposeConstellation(cluster));
     }
@@ -309,7 +309,6 @@ function highlightClusters(clusters) {
         cluster.circleElement.style.left = `${cluster.details.location.left - 25}px`;
         cluster.circleElement.style.top = `${cluster.details.location.top}px`;
     });
-    console.log('test')
 }
 
 
