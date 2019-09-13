@@ -5,9 +5,18 @@ class TouchPoint {
         this.clusterMember = false;
         this.element = element;
         this.identifier = identifier;
+        this.membership = [];
     }
 
     destroy() {
         document.getElementById('touch-area').removeChild(this.element);
+    }
+
+    addMembership(key) {
+        this.membership.push(key);
+    }
+
+    removeMembership(key) {
+        
     }
 }
