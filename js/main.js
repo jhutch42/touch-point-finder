@@ -131,9 +131,15 @@ function findClusters() {
                 }
         });
 
+        if (possibleCluster.length > 2) {
             clusterKey++;
+            // cluster found
+            const obj = {};
+            possibleCluster.forEach((point, index) => {
+                obj[index] = point.identifier;
                 point.addMembership(clusterKey);
             });
+            
             clusters.push(new Cluster(possibleCluster, obj, clusterKey));
         }
     }
