@@ -141,7 +141,7 @@ function findClusters() {
             }
         });
 
-        if (possibleCluster.length > 2) {
+        if (possibleCluster.length === 3) {
             // cluster found
             const obj = {};
             possibleCluster.forEach((point, index) => {
