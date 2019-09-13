@@ -26,8 +26,8 @@ document.addEventListener('touchend', (event) => {
         findClusters();
         Object.values(touchPoints).forEach(point => {
             if (point !== undefined) {
-                console.log(point);
-                point.destoy();
+                document.getElementById('touch-area').removeChild(point.element);
+                point = undefined;
             }
         });
         evaluateTouchData(event);
