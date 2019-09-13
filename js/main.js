@@ -2,7 +2,7 @@ const CLUSTER_DISTANCE_MAX = 120;
 const TOUCHPOINT_SIZE = 20;
 const NORMAL = 0;
 const CREATE_CONSTELLATION = 1;
-const ANGLE_THRESHOLD = 15;
+const ANGLE_THRESHOLD = 5;
 
 let state = NORMAL;
 let point = null;
