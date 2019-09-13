@@ -1,4 +1,4 @@
-const CLUSTER_DISTANCE_MAX = 120;
+const CLUSTER_DISTANCE_MAX = 350;
 const TOUCHPOINT_SIZE = 20;
 const NORMAL = 0;
 const CREATE_CONSTELLATION = 1;
@@ -75,7 +75,7 @@ function addTouchEvents(event) {
                 const element = document.createElement('div');
                 element.className = 'touchpoint';
                 document.getElementById('touch-area').appendChild(element);
-                touchPoints[touch.identifier] = new TouchPoint(element, touch.screenX, touch.screenY, touch.identifier);
+                touchPoints[touch.identifier] = new TouchPoint(element, touch.screenX, touch.screenY, touch.identifier, true);
             }
         });
     }
@@ -103,6 +103,7 @@ function evaluateTouchData(event) {
     findClusters();
 }
 
+
 function drawTouchPoints() {
     Object.values(touchPoints).forEach(point => {
         if (point !== undefined) {
@@ -119,7 +120,6 @@ function findClusters() {
     Object.values(touchPoints).forEach(point => {
         
         if (point !== undefined) {
-            point.clusterMember = false;
             activePoints.push(point);
         }
     });
@@ -134,14 +134,12 @@ function findClusters() {
         const possibleCluster = [];
         possibleCluster.push(currentPoint);
         activePoints.forEach(point => {
-            if (!point.clusterMember) {
                 if (Math.abs(currentPoint.x - point.x) <= CLUSTER_DISTANCE_MAX && Math.abs(currentPoint.y - point.y) <= CLUSTER_DISTANCE_MAX) {
                     possibleCluster.push(point);
                 }
-            }
         });
 
-        if (possibleCluster.length === 3) {
+        if (possibleCluster.length >= 3) {
             // cluster found
             const obj = {};
             possibleCluster.forEach((point, index) => {
