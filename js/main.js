@@ -32,6 +32,8 @@ document.addEventListener('touchend', (event) => {
         if (clusters.length > 0) {
             removeClusters(clusters);
         }
+
+        clearAll();
     }
 }, { passive: false });
 
@@ -43,6 +45,10 @@ document.getElementById('decompose').addEventListener('touchstart', () => {
 const touchPoints = {};
 let clusters = [];
 const constellations = [];
+
+function clearAll() {
+    document.getElementById('touch-area').children.forEach(e => e.style.display = none);
+}
 
 function updateTouchEvents(event) {
     Object.values(event.changedTouches).forEach(touch => {
