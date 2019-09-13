@@ -22,12 +22,11 @@ document.addEventListener('touchmove', (event) => {
 document.addEventListener('touchend', (event) => {
     removeTouches(event.changedTouches);
     printTouchLength(event);
-    if (event.touches.length === 0 && Object.keys(clusters).length > 0) {
-        findClusters();
+    if (event.touches.length === 0) {
         Object.values(touchPoints).forEach(point => {
             if (point !== undefined) {
-                point.element.style.display = 'none';
-                point = undefined;
+                getTouchPointByIdentifier(point.identifier).destroy();
+                touchPoints[point.identifier] = undefined;
             }
         });
         evaluateTouchData(event);
@@ -219,7 +218,6 @@ function decomposeConstellation(cluster) {
         }
     });
 
-    console.log(angles);
 
     if (state === CREATE_CONSTELLATION) {
         constellations.push(angles);
