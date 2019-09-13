@@ -1,4 +1,4 @@
-const CLUSTER_DISTANCE_MAX = 200;
+const CLUSTER_DISTANCE_MAX = 120;
 const TOUCHPOINT_SIZE = 20;
 const NORMAL = 0;
 const CREATE_CONSTELLATION = 1;
@@ -117,7 +117,9 @@ function findClusters() {
     let activePoints = [];
 
     Object.values(touchPoints).forEach(point => {
+        
         if (point !== undefined) {
+            point.clusterMember = false;
             activePoints.push(point);
         }
     });
@@ -132,8 +134,10 @@ function findClusters() {
         const possibleCluster = [];
         possibleCluster.push(currentPoint);
         activePoints.forEach(point => {
-            if (Math.abs(currentPoint.x - point.x) <= CLUSTER_DISTANCE_MAX && Math.abs(currentPoint.y - point.y) <= CLUSTER_DISTANCE_MAX) {
-                possibleCluster.push(point);
+            if (!point.clusterMember) {
+                if (Math.abs(currentPoint.x - point.x) <= CLUSTER_DISTANCE_MAX && Math.abs(currentPoint.y - point.y) <= CLUSTER_DISTANCE_MAX) {
+                    possibleCluster.push(point);
+                }
             }
         });
 
