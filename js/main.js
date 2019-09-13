@@ -11,18 +11,8 @@ document.addEventListener('touchstart', (event) => {
     addTouchEvents(event);
     evaluateTouchData(event);
     event.preventDefault();
-}, { passive: false });
-
-document.addEventListener('touchmove', (event) => {
-    updateTouchEvents(event);
-    evaluateTouchData(event);
-    event.preventDefault();
-}, { passive: false });
-
-document.addEventListener('touchend', (event) => {
-    removeTouches(event.changedTouches);
-    printTouchLength(event);
     if (event.touches.length === 0) {
+        clearAll();
         Object.values(touchPoints).forEach(point => {
             if (point !== undefined) {
                 getTouchPointByIdentifier(point.identifier).destroy();
@@ -30,10 +20,43 @@ document.addEventListener('touchend', (event) => {
             }
         });
         if (clusters.length > 0) {
-            removeClusters(clusters);
+            clusters = [];
         }
+    }
+}, { passive: false });
 
+document.addEventListener('touchmove', (event) => {
+    updateTouchEvents(event);
+    evaluateTouchData(event);
+    event.preventDefault();
+    if (event.touches.length === 0) {
         clearAll();
+        Object.values(touchPoints).forEach(point => {
+            if (point !== undefined) {
+                getTouchPointByIdentifier(point.identifier).destroy();
+                touchPoints[point.identifier] = undefined;
+            }
+        });
+        if (clusters.length > 0) {
+            clusters = [];
+        }
+    }
+}, { passive: false });
+
+document.addEventListener('touchend', (event) => {
+    removeTouches(event.changedTouches);
+    printTouchLength(event);
+    if (event.touches.length === 0) {
+        clearAll();
+        Object.values(touchPoints).forEach(point => {
+            if (point !== undefined) {
+                getTouchPointByIdentifier(point.identifier).destroy();
+                touchPoints[point.identifier] = undefined;
+            }
+        });
+        if (clusters.length > 0) {
+            clusters = [];
+        }
     }
 }, { passive: false });
 
