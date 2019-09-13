@@ -26,6 +26,7 @@ document.addEventListener('touchend', (event) => {
         findClusters();
         Object.values(touchPoints).forEach(point => point.destoy());
         evaluateTouchData(event);
+        console.log(touchPoints);
     }
 }, { passive: false });
 
