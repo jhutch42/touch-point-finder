@@ -23,7 +23,6 @@ document.addEventListener('touchend', (event) => {
     removeTouches(event.changedTouches);
     printTouchLength(event);
     evaluateTouchData(event);
-    /*
     if (event.touches.length === 0) {
         Object.values(touchPoints).forEach(point => {
             if (point !== undefined) {
@@ -32,10 +31,10 @@ document.addEventListener('touchend', (event) => {
             }
         });
         if (clusters.length > 0) {
+            clusters.forEach(cluster => cluster.circleElement.style.display = 'none');
             clusters = [];
         }
     }
-    */
 }, { passive: false });
 
 document.getElementById('create-constellation').addEventListener('touchstart', createConstellation);
