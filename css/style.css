@@ -1,7 +1,7 @@
 :root {
     --touchPoint-color: red;
     --touchpoint-size: 20px;
-    --clusterCircle-color: green;
+    --clusterCircle-color: orange;
     --circular: 50%;
     --lineColor: black;
 }
@@ -24,7 +24,7 @@ body {
     height: var(--touchpoint-size);
     border-radius: var(--circular);
     position: absolute;
-    display: none;
+    display: block;
 }
 
 .cluster-circle-element {
@@ -38,4 +38,12 @@ body {
     height: 1px;
     background-color: var(--lineColor);
     transform-origin: bottom left;
+}
+
+#create-constellation-data {
+    display: none;
+}
+
+#decompose {
+    display: none;
 }

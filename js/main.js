@@ -1,133 +1,165 @@
-const CLUSTER_DISTANCE_MAX = 250;
+const CLUSTER_DISTANCE_MAX = 400;
+const TOUCHPOINT_SIZE = 20;
+const NORMAL = 0;
+const CREATE_CONSTELLATION = 1;
+const ANGLE_THRESHOLD = 10;
+
+let state = NORMAL;
+let point = null;
 
 document.addEventListener('touchstart', (event) => {
+    addTouchEvents(event);
     evaluateTouchData(event);
     event.preventDefault();
 }, { passive: false });
 
 document.addEventListener('touchmove', (event) => {
+    updateTouchEvents(event);
     evaluateTouchData(event);
     event.preventDefault();
 }, { passive: false });
 
 document.addEventListener('touchend', (event) => {
-    evaluateTouchData(event);
-    event.preventDefault();
+    removeTouches(event.changedTouches);
+    printTouchLength(event);
+    if (event.touches.length === 0 && Object.keys(clusters).length > 0) {
+        findClusters();
+        evaluateTouchData(event);
+    }
 }, { passive: false });
 
-const touchPoints = [];
+document.getElementById('create-constellation').addEventListener('touchstart', createConstellation);
+document.getElementById('decompose').addEventListener('touchstart', () => {
+    decomposeConstellation(clusters[0]);
+});
+
+const touchPoints = {};
 let clusters = [];
+const constellations = [];
 
-function createTouchPoints() {
-    for (let i = 0; i < 10; i++) {
+function updateTouchEvents(event) {
+    Object.values(event.changedTouches).forEach(touch => {
+        getTouchPointByIdentifier(touch.identifier).x = touch.screenX;
+        getTouchPointByIdentifier(touch.identifier).y = touch.screenY;
+    });
+}
 
-        const element = document.createElement('div');
-        element.className = 'touchpoint';
-        document.getElementById('touch-area').appendChild(element);
-
-        touchPoints.push(
-            {
-                'element': element,
-                'display': 'none',
-                'x': -100,
-                'y': -100,
-                'clusterMember': false
+function addTouchEvents(event) {
+    if (!event.type === 'touchstart') {
+        return false;
+    } else {
+        Object.values(event.changedTouches).forEach(touch => {
+            if (getTouchPointByIdentifier(touch.identifier) === undefined) {
+                const element = document.createElement('div');
+                element.className = 'touchpoint';
+                document.getElementById('touch-area').appendChild(element);
+                touchPoints[touch.identifier] = new TouchPoint(element, touch.screenX, touch.screenY, touch.identifier);
             }
-        );
+        });
     }
+}
 
+function getTouchPointByIdentifier(id) {
+    return touchPoints[id];
+}
+
+function removeTouches(changedTouches) {
+    Object.values(changedTouches).forEach(touch => {
+        getTouchPointByIdentifier(touch.identifier).destroy();
+        touchPoints[touch.identifier] = undefined;
+    });
+}
+
+function printTouchLength(event) {
+    const touchDataEntry = document.getElementById('touchDataEntry');
+    touchDataEntry.innerHTML = event.touches.length;
 }
 
 function evaluateTouchData(event) {
-    const touchDataEntry = document.getElementById('touchDataEntry');
-    touchDataEntry.innerHTML = event.touches.length;
-    clearTouchPoints();
-
-    Object.values(event.touches).forEach((touchPoint, index) => {
-        const point = touchPoints[index];
-
-        point.display = 'block';
-        point.x = touchPoint.screenX;
-        point.y = touchPoint.screenY;
-    });
-
+    printTouchLength(event);
     drawTouchPoints();
     findClusters();
 }
 
 function drawTouchPoints() {
     Object.values(touchPoints).forEach(point => {
-        point.element.style.display = point.display;
-
-        if (point.display === 'none') {
-            point.x = -100;
-            point.y = -100;
+        if (point !== undefined) {
+            point.element.style.left = `${point.x}px`;
+            point.element.style.top = `${point.y}px`;
         }
-        point.element.style.left = `${point.x}px`;
-        point.element.style.top = `${point.y}px`;
-    });
-}
-
-function clearTouchPoints() {
-
-
-    Object.values(touchPoints).forEach(point => {
-        point.display = 'none';
-        point.clusterMember = false;
     });
 }
 
 function findClusters() {
     // Only look for clusters greater than 3 in size
     let activePoints = [];
-    const totalClusters = [];
 
     Object.values(touchPoints).forEach(point => {
-        if (point.display === 'block') {
+        if (point !== undefined) {
             activePoints.push(point);
         }
     });
 
+    const totalClusters = [];
+
     activePoints = activePoints.sort((a, b) => (a.x > b.x) ? 1 : -1);
 
-    if (activePoints.length > 2) {
-        while (activePoints.length > 0) {
-            const currentPoint = activePoints.shift();
+    while (activePoints.length > 0) {
+        const currentPoint = activePoints.shift();
 
-            if (!currentPoint.clusterMember) {
-                const possibleCluster = [];
-                possibleCluster.push(currentPoint);
-                activePoints.forEach(point => {
-                    if (Math.abs(currentPoint.x - point.x) <= CLUSTER_DISTANCE_MAX && Math.abs(currentPoint.y - point.y) <= CLUSTER_DISTANCE_MAX) {
-                        possibleCluster.push(point);
-                    }
-                });
-
-                if (possibleCluster.length > 2) {
-                    // cluster found
-                    possibleCluster.forEach(point => point.clusterMember = true);
-                    totalClusters.push(possibleCluster);
-                }
+        const possibleCluster = [];
+        possibleCluster.push(currentPoint);
+        activePoints.forEach(point => {
+            if (Math.abs(currentPoint.x - point.x) <= CLUSTER_DISTANCE_MAX && Math.abs(currentPoint.y - point.y) <= CLUSTER_DISTANCE_MAX) {
+                possibleCluster.push(point);
             }
+        });
+
+        if (possibleCluster.length > 2) {
+            // cluster found
+            const obj = {};
+            possibleCluster.forEach((point, index) => {
+                point.clusterMember = true;
+                obj[index] = point.identifier;
+            });
+            totalClusters.push({ points: obj });
         }
     }
 
+
     document.getElementById('clusterDataEntry').innerHTML = totalClusters.length;
     findClusterCenter(totalClusters);
+    if (state === CREATE_CONSTELLATION) {
+        const button = document.getElementById('decompose');
+        const display = document.getElementById('number-of-points-in-constellation');
+        if (clusters.length === 1) {
+            button.style.display = 'block';
+            display.innerHTML = Object.keys(clusters[0].points).length;
+        } else {
+            button.style.display = 'none';
+            display.innerHTML = 0;
+        }
+    }
 }
 
 function findClusterCenter(totalClusters) {
 
-    totalClusters.forEach(cluster => {
+    Object.values(totalClusters).forEach(cluster => {
+
+        startingPoint = getTouchPointByIdentifier(cluster.points[0]);
 
         const values = {
-            minX: cluster[0].x,
-            minY: cluster[0].y,
-            maxX: cluster[0].x,
-            maxY: cluster[0].y
+            minX: startingPoint.x,
+            minY: startingPoint.y,
+            maxX: startingPoint.x,
+            maxY: startingPoint.y
         }
 
-        cluster.forEach(point => {
+        Object.values(cluster.points).forEach(id => {
+
+            point = getTouchPointByIdentifier(id);
+
+
             if (point.x < values.minX) {
                 values.minX = point.x;
             } else if (point.x > values.maxX) {
@@ -152,12 +184,79 @@ function findClusterCenter(totalClusters) {
             document.getElementById('touch-area').removeChild(cluster.circleElement);
             cluster.lines.forEach(line => document.getElementById('touch-area').removeChild(line));
         });
+
     }
 
     clusters = totalClusters;
     highlightClusters(clusters);
     connectClustersWithLines(clusters);
+    if (state === NORMAL) {
+        clusters.forEach(cluster => decomposeConstellation(cluster));
+    }
 }
+
+
+function decomposeConstellation(cluster) {
+    let angles = [];
+
+    Object.values(cluster.points).forEach((point, index) => {
+        for (let i = 0; i < Object.keys(cluster.points).length; i++) {
+            let pointA = getTouchPointByIdentifier(point);
+            if (i !== index) {
+                let pointB = getTouchPointByIdentifier(cluster.points[i]);
+                angles.push({
+                    main: index,
+                    sub: i,
+                    theta: getThetaRaw(getXDistance(pointA, pointB), getYDistance(pointA, pointB))
+                });
+            }
+        }
+    });
+
+    console.log(angles);
+
+    if (state === CREATE_CONSTELLATION) {
+        constellations.push(angles);
+        state = NORMAL;
+        document.getElementById('create-constellation-data').style.display = 'none';
+    } else {
+        findMatch(angles, cluster);
+    }
+}
+
+function findMatch(angles, cluster) {
+
+    if (constellations.length > 0) {
+        constellations.forEach(constellation => {
+            let match = true;
+            Object.values(angles).forEach(angleA => {
+                if (!containsAngle(constellation, angleA)) {
+                    match = false;
+                }
+            });
+            if (match) {
+                cluster.circleElement.style.borderColor = 'green';
+            }
+        });
+    }
+    
+}
+
+
+function containsAngle(constellation, angleA) {
+    let found = false;
+    Object.values(constellation).forEach(angleB => {
+        if (compareAngles(angleA.theta, angleB.theta, ANGLE_THRESHOLD)) {
+            found = true;
+        }
+    });
+    return found;
+}
+
+function compareAngles(a, b, threshold) {
+    return (Math.abs(a - b) <= threshold);
+}
+
 
 function calcCenter(values) {
     return {
@@ -176,6 +275,7 @@ function calcWidthHeight(values) {
 }
 
 function highlightClusters(clusters) {
+
     clusters.forEach(cluster => {
         const parentDiv = document.getElementById('touch-area');
         cluster.circleElement = document.createElement('div');
@@ -190,16 +290,24 @@ function highlightClusters(clusters) {
 
 
 function connectClustersWithLines(clusters) {
-    clusters.forEach(cluster => {
+
+    Object.values(clusters).forEach(cluster => {
         cluster.lines = [];
-        const points = cluster;
+
+        const points = [];
+        Object.values(cluster.points).forEach(point => points.push(point));
 
         while (points.length > 1) {
+
             pointA = points.shift();
+            pointA = getTouchPointByIdentifier(pointA);
+
             x = pointA.x;
             y = pointA.y;
 
             points.forEach(pointB => {
+
+                pointB = getTouchPointByIdentifier(pointB);
 
                 const xDistance = getXDistance(pointA, pointB);
                 const yDistance = getYDistance(pointA, pointB);
@@ -213,8 +321,8 @@ function connectClustersWithLines(clusters) {
 
                 line.className = 'connecting-line';
                 line.style.width = `${width}px`;
-                line.style.left = `${pointA.x}px`;
-                line.style.top = `${pointA.y}px`;
+                line.style.left = `${pointA.x + TOUCHPOINT_SIZE / 2}px`;
+                line.style.top = `${pointA.y + TOUCHPOINT_SIZE / 2}px`;
                 line.style.transform = `rotate(-${theta}deg)`;
                 cluster.lines.push(line);
             });
@@ -254,6 +362,11 @@ function getTheta(adjacent, opposite, quadrant) {
     return radToDegrees(theta);
 }
 
+function getThetaRaw(adjacent, opposite) {
+    // tangent of opposite over adjacent
+    return radToDegrees(Math.atan(opposite / adjacent));
+}
+
 function radToDegrees(theta) {
     return theta * 180 / Math.PI;
 }
@@ -270,4 +383,8 @@ function getYDistance(a, b) {
     return Math.abs(a.y - b.y);
 }
 
-window.onload = createTouchPoints;
+function createConstellation() {
+    document.getElementById('create-constellation-data').style.display = 'block';
+    state = CREATE_CONSTELLATION;
+}
+

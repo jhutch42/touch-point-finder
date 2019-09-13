@@ -18,12 +18,18 @@
             <div class="button-area">
                 <button id="create-constellation">Create Constellation</button>
             </div>
-            <div class="message-area"></div>
+            <div id="data-display-area">
+                <div id="create-constellation-data">
+                    <p>Touch the table to create a constellation</p>
+                    <p>Number of points in the constellation: <span id="number-of-points-in-constellation">0</span></p>
+                    <button id="decompose">Save Constellation</button>
+                </div>
+            </div>
         </div>
         <div id="touch-area" class="touch-area">
 
         </div>
-
+        <script src="js/classes/touchPoint.js"></script>
         <script src="js/main.js" async defer></script>
     </body>
 </html>
