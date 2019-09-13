@@ -26,12 +26,11 @@ document.addEventListener('touchend', (event) => {
         findClusters();
         Object.values(touchPoints).forEach(point => {
             if (point !== undefined) {
-                document.getElementById('touch-area').removeChild(point.element);
+                point.element.style.display = 'none';
                 point = undefined;
             }
         });
         evaluateTouchData(event);
-        
     }
 }, { passive: false });
 

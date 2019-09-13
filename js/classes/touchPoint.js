@@ -5,7 +5,6 @@ class TouchPoint {
         this.clusterMember = false;
         this.element = element;
         this.identifier = identifier;
-        this.remove = this.destroy();
     }
 
     destroy() {
