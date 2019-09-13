@@ -1,4 +1,4 @@
-const CLUSTER_DISTANCE_MAX = 400;
+const CLUSTER_DISTANCE_MAX = 200;
 const TOUCHPOINT_SIZE = 20;
 const NORMAL = 0;
 const CREATE_CONSTELLATION = 1;
@@ -24,6 +24,7 @@ document.addEventListener('touchend', (event) => {
     printTouchLength(event);
     if (event.touches.length === 0 && Object.keys(clusters).length > 0) {
         findClusters();
+        Object.values(touchPoints).forEach(point => point.destoy());
         evaluateTouchData(event);
     }
 }, { passive: false });
