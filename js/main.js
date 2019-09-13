@@ -11,43 +11,18 @@ document.addEventListener('touchstart', (event) => {
     addTouchEvents(event);
     evaluateTouchData(event);
     event.preventDefault();
-    if (event.touches.length === 0) {
-        clearAll();
-        Object.values(touchPoints).forEach(point => {
-            if (point !== undefined) {
-                getTouchPointByIdentifier(point.identifier).destroy();
-                touchPoints[point.identifier] = undefined;
-            }
-        });
-        if (clusters.length > 0) {
-            clusters = [];
-        }
-    }
 }, { passive: false });
 
 document.addEventListener('touchmove', (event) => {
     updateTouchEvents(event);
     evaluateTouchData(event);
     event.preventDefault();
-    if (event.touches.length === 0) {
-        clearAll();
-        Object.values(touchPoints).forEach(point => {
-            if (point !== undefined) {
-                getTouchPointByIdentifier(point.identifier).destroy();
-                touchPoints[point.identifier] = undefined;
-            }
-        });
-        if (clusters.length > 0) {
-            clusters = [];
-        }
-    }
 }, { passive: false });
 
 document.addEventListener('touchend', (event) => {
     removeTouches(event.changedTouches);
     printTouchLength(event);
     if (event.touches.length === 0) {
-        clearAll();
         Object.values(touchPoints).forEach(point => {
             if (point !== undefined) {
                 getTouchPointByIdentifier(point.identifier).destroy();
@@ -57,6 +32,7 @@ document.addEventListener('touchend', (event) => {
         if (clusters.length > 0) {
             clusters = [];
         }
+        clearAll();
     }
 }, { passive: false });
 
@@ -70,7 +46,11 @@ let clusters = [];
 const constellations = [];
 
 function clearAll() {
-    document.getElementById('touch-area').children.forEach(e => e.style.display = none);
+    document.body.removeChild(document.getElementById('touch-area'));
+    const area = document.createElement('div');
+    area.id = 'touch-area';
+    area.className = 'touch-area';
+    document.body.appendChild(area);
 }
 
 function updateTouchEvents(event) {
