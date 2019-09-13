@@ -32,7 +32,6 @@ document.addEventListener('touchend', (event) => {
         if (clusters.length > 0) {
             clusters = [];
         }
-        clearAll();
     }
 }, { passive: false });
 
@@ -45,13 +44,6 @@ const touchPoints = {};
 let clusters = [];
 const constellations = [];
 
-function clearAll() {
-    document.body.removeChild(document.getElementById('touch-area'));
-    const area = document.createElement('div');
-    area.id = 'touch-area';
-    area.className = 'touch-area';
-    document.body.appendChild(area);
-}
 
 function updateTouchEvents(event) {
     Object.values(event.changedTouches).forEach(touch => {
@@ -217,7 +209,7 @@ function findClusterCenter(totalClusters) {
 
     clusters = totalClusters;
     highlightClusters(clusters);
-    connectClustersWithLines(clusters);
+    //connectClustersWithLines(clusters);
     if (state === NORMAL) {
         clusters.forEach(cluster => decomposeConstellation(cluster));
     }
