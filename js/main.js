@@ -29,7 +29,9 @@ document.addEventListener('touchend', (event) => {
                 touchPoints[point.identifier] = undefined;
             }
         });
-        evaluateTouchData(event);
+        if (clusters.length > 0) {
+            removeClusters(clusters);
+        }
     }
 }, { passive: false });
 
@@ -47,6 +49,18 @@ function updateTouchEvents(event) {
         getTouchPointByIdentifier(touch.identifier).x = touch.screenX;
         getTouchPointByIdentifier(touch.identifier).y = touch.screenY;
     });
+}
+
+function removeClusters(clusters) {
+    clusters.forEach(cluster => {
+        if (cluster.circleElement) {
+            cluster.circleElement.style.display = 'none';
+        } 
+
+        if (cluster.lines.length > 0) {
+            cluster.lines.forEach(line => line.style.display = 'none');
+        }
+     });
 }
 
 function addTouchEvents(event) {
@@ -243,7 +257,7 @@ function findMatch(angles, cluster) {
             }
         });
     }
-    
+
 }
 
 
