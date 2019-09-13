@@ -22,6 +22,8 @@ document.addEventListener('touchmove', (event) => {
 document.addEventListener('touchend', (event) => {
     removeTouches(event.changedTouches);
     printTouchLength(event);
+    evaluateTouchData(event);
+    /*
     if (event.touches.length === 0) {
         Object.values(touchPoints).forEach(point => {
             if (point !== undefined) {
@@ -33,6 +35,7 @@ document.addEventListener('touchend', (event) => {
             clusters = [];
         }
     }
+    */
 }, { passive: false });
 
 document.getElementById('create-constellation').addEventListener('touchstart', createConstellation);
@@ -202,9 +205,8 @@ function findClusterCenter(totalClusters) {
     if (clusters.length > 0) {
         clusters.forEach(cluster => {
             document.getElementById('touch-area').removeChild(cluster.circleElement);
-            cluster.lines.forEach(line => document.getElementById('touch-area').removeChild(line));
+            // cluster.lines.forEach(line => document.getElementById('touch-area').removeChild(line));
         });
-
     }
 
     clusters = totalClusters;
@@ -258,7 +260,6 @@ function findMatch(angles, cluster) {
             }
         });
     }
-
 }
 
 
@@ -305,6 +306,7 @@ function highlightClusters(clusters) {
         cluster.circleElement.style.left = `${cluster.details.location.left - 25}px`;
         cluster.circleElement.style.top = `${cluster.details.location.top}px`;
     });
+    console.log('test')
 }
 
 
