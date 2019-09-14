@@ -14,7 +14,6 @@ class Cluster {
         this.lines = this.createLines();
         this.connectPointsWithLines();
         this.moveCircle();
-        console.log(this);
     }
 
     updateCluster() {
@@ -94,7 +93,6 @@ class Cluster {
                 line.style.left = `${pointA.x + TOUCHPOINT_SIZE / 2}px`;
                 line.style.top = `${pointA.y + TOUCHPOINT_SIZE / 2}px`;
                 line.style.transform = `rotate(-${theta}deg)`;
-                this.lines.push(line);
                 index++;
             });
         }
@@ -139,14 +137,16 @@ class Cluster {
     }
 
     destroy() {
+        console.log(this.clusterKey);
         this.lines.forEach(line => line.style.display = 'none');
         this.circleElement.style.display = 'none';
+        console.log(this.lines);
         this.points.forEach(point => {
             if (point !== undefined) {
                 point.clusterMember = false;
                 point.membership.splice(point.membership.indexOf(this.clusterKey), 1);
             }
         });
-        clusters.splice(clusters.indexOf(this, 1));
+        clusters.splice(clusters.indexOf(this), 1);
     }
 }

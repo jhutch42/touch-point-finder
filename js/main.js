@@ -26,6 +26,7 @@ document.addEventListener('touchend', (event) => {
     removeTouches(event.changedTouches);
     printTouchLength(event);
     evaluateTouchData(event);
+    console.log(clusters);
 }, { passive: false });
 
 document.getElementById('create-constellation').addEventListener('touchstart', createConstellation);
@@ -47,7 +48,6 @@ function updateTouchEvents(event) {
 
 function updateClusters() {
     clusters.forEach(cluster => cluster.updateCluster());
-    console.log(clusters.length);
 }
 
 
@@ -80,7 +80,7 @@ function removeTouches(changedTouches) {
                 }
             });
             point.destroy();
-            touchPoints[touch.identifier] = undefined;
+            delete touchPoints[touch.identifier];
         }
     });
 }
@@ -91,9 +91,16 @@ function printTouchLength(event) {
 }
 
 function evaluateTouchData(event) {
+    findDeadPoints(event.touches);
     printTouchLength(event);
     drawTouchPoints();
     findClusters();
+}
+
+function findDeadPoints(touches) {
+    if (touches.length !== Object.keys(touchPoints).length) {
+        console.log('dead');
+    }
 }
 
 

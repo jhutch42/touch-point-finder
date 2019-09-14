@@ -17,6 +17,7 @@ class TouchPoint {
     }
 
     removeMembership(key) {
-        
+        const index = this.membership.indexOf(key);
+        this.membership.splice(index, 1);
     }
 }
