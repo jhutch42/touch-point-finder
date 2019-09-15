@@ -146,8 +146,7 @@ function findClusters() {
                 obj[index] = point.identifier;
                 point.addMembership(clusterKey);
             });
-            
-            clusters.push(new Cluster(possibleCluster, obj, clusterKey));
+                 clusters.push(new Cluster(possibleCluster, obj, clusterKey));
         }
     }
 
