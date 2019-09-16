@@ -15,7 +15,45 @@ body {
 .data-display-wrapper {
     width: 100%;
     margin: 0;
-    height: 15%;
+    height: 25%;
+}
+
+.basic-data {
+    width: 25%;
+    float:left;
+    position: relative;
+}
+
+.constellation-data {
+    width: 25%;
+    float: right;
+    position: relative;
+}
+
+.configure {
+    width: 25%;
+    position: relative;
+    float: left;
+}
+
+.increase-decrease {
+    width: 100%;
+    position: absolute;
+}
+
+.increase-decrease p {
+    width: 50%;
+    float: left;
+    position: relative;
+}
+
+.increase-decrease button {
+    width: 12%;
+    height: 40px;
+    margin: 10px;
+    position: relative;
+    float: left;
+    font-size: 30px;
 }
 
 .touchpoint {

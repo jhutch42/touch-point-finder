@@ -1,38 +1,44 @@
 <!DOCTYPE html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Touch Point Test</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="css/style.css">
-    </head>
-    <body>
-        <div class="data-display-wrapper">
-            <div class="data-entry-location">
-                <p>Current Touch Points Detected: <span id="touchDataEntry">0</span></p>
-            </div>
-            <div class="data-entry-location">
-                <p>Current Clusters Detected: <span id="clusterDataEntry">0</span></p>
-            </div>
-            <div class="button-area">
-                <button id="create-constellation">Create Constellation</button>
-            </div>
-            <div id="data-display-area">
-                <div id="create-constellation-data">
-                    <p>Touch the table to create a constellation</p>
-                    <p>Number of points in the constellation: <span id="number-of-points-in-constellation">0</span></p>
-                    <button id="decompose">Save Constellation</button>
-                </div>
-                <div id="point-info" class="point-info"></div>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Touch Point Test</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="data-display-wrapper">
+        <div class="basic-data">
+            <p>Current Touch Points Detected: <span id="touchDataEntry">0</span></p>
+            <p>Current Clusters Detected: <span id="clusterDataEntry">0</span></p>
+            <button id="create-constellation">Create Constellation</button>
+        </div>
+
+        <div class="configure">
+            <div class="increase-decrease" id="angle-threshold">
+                <p>Angle Comparison Value: <span id="angle-threshold-value">0</span></p><button
+                    id="decrease-angle-threshold">-</button><button id="increase-angle-threshold">+</button>
             </div>
         </div>
-        <div id="touch-area" class="touch-area">
+        <div class="constellation-data">
+            <div id="create-constellation-data">
+                <p>Touch the table to create a constellation</p>
+                <p>Number of points in the constellation: <span id="number-of-points-in-constellation">0</span></p>
+                <button id="decompose">Save Constellation</button>
+            </div>
 
         </div>
-        <script src="js/classes/touchPoint.js"></script>
-        <script src="js/classes/cluster.js"></script>
-        <script src="js/classes/constellation.js"></script>
-        <script src="js/main.js" async defer></script>
-    </body>
+    </div>
+    <div id="touch-area" class="touch-area">
+
+    </div>
+    <script src="js/classes/touchPoint.js"></script>
+    <script src="js/classes/cluster.js"></script>
+    <script src="js/classes/constellation.js"></script>
+    <script src="js/main.js" async defer></script>
+</body>
+
 </html>

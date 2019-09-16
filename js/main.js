@@ -2,12 +2,15 @@ const CLUSTER_DISTANCE_MAX = 350;
 const TOUCHPOINT_SIZE = 20;
 const NORMAL = 0;
 const CREATE_CONSTELLATION = 1;
-const ANGLE_THRESHOLD = 5;
+
+let angleThreshold = 5;
 
 let clusterKey = 0;
 
 let state = NORMAL;
 let point = null;
+
+window.addEventListener('load', updatePageData);
 
 document.addEventListener('touchstart', (event) => {
     addTouchEvents(event);
@@ -38,10 +41,28 @@ document.getElementById('decompose').addEventListener('touchstart', () => {
     }
 });
 
+document.getElementById('increase-angle-threshold').addEventListener('touchstart', increaseAngleThreshold);
+document.getElementById('decrease-angle-threshold').addEventListener('touchstart', decreaseAngleThreshold);
+
 const touchPoints = {};
 let clusters = [];
 const constellations = [];
 
+function increaseAngleThreshold() {
+    angleThreshold++;
+    updatePageData();
+}
+
+function decreaseAngleThreshold() {
+    if (angleThreshold > 0) {
+        angleThreshold--;
+    }
+    updatePageData();
+}
+
+function updatePageData() {
+    document.getElementById('angle-threshold-value').innerHTML = angleThreshold;
+}
 
 function updateTouchEvents(event) {
     Object.values(event.changedTouches).forEach(touch => {
@@ -297,4 +318,3 @@ function decompose(input) {
         return tempAngles2;
     }
 }
-

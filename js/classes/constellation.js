@@ -15,7 +15,7 @@ class Constellation {
             let notFoundYet = true;
             if (notFoundYet) {
                 this.angles.forEach(element_2 => {
-                    if (Math.abs(element.angle - element_2) < 3) {
+                    if (Math.abs(element.angle - element_2) < angleThreshold) {
                         if (!element.found) {
                             element.found = true;  // Mark this as found
                             notFoundYet = false;   // Found the Angle
