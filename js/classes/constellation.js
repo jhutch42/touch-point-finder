@@ -9,20 +9,29 @@ class Constellation {
     compare(points) {
 
         const anglesB = decompose(points);
-        console.log(anglesB);
-        let found = null;
-        anglesB.forEach(element => {
-            found = false;
-            this.angles.forEach(element_2 => {
-                if (Math.abs(element - element_2) < 2) {
-                    found = true;
-                }
-            });
-            if (!found) {
-                return found;
+        const testAngles = [];
+        anglesB.forEach(angle => testAngles.push({ angle: angle, found: false }));
+        testAngles.forEach(element => {
+            let notFoundYet = true;
+            if (notFoundYet) {
+                this.angles.forEach(element_2 => {
+                    if (Math.abs(element.angle - element_2) < 3) {
+                        if (!element.found) {
+                            element.found = true;  // Mark this as found
+                            notFoundYet = false;   // Found the Angle
+                        }
+                    }
+                });
             }
         });
-        return found;
+
+        let count = 0;
+        testAngles.forEach(angle => {
+            if (angle.found) {
+                count++;
+            }
+        });
+        return count === 3;
     }
 
 }

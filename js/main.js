@@ -261,6 +261,12 @@ function getClusterByKey(key) {
 }
 
 function decompose(input) {
+
+    if (state === CREATE_CONSTELLATION) {
+        document.getElementById('create-constellation-data').style.display = 'none';
+        state = NORMAL;
+    }
+    
     if (input.length === 3) {
         let tempAngles = [];
 
@@ -279,10 +285,8 @@ function decompose(input) {
         });
 
         tempAngles = tempAngles.sort((a, b) => (a.x > b.x) ? 1 : -1);
-        console.log(tempAngles);
         let tempAngles2 = [];
         for (let i = 0; i < tempAngles.length; i += 2) {
-            console.log(`i => ${tempAngles[i].theta}, i+1 => ${tempAngles[i + 1].theta}`);
             let calculatedAngle = Math.abs(tempAngles[i].theta - tempAngles[i + 1].theta);
             if (calculatedAngle > 180) {
                 calculatedAngle = 360 - calculatedAngle;
@@ -291,7 +295,6 @@ function decompose(input) {
 
         }
         return tempAngles2;
-
     }
 }
 
