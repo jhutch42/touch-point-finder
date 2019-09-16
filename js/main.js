@@ -1,10 +1,9 @@
-const CLUSTER_DISTANCE_MAX = 350;
 const TOUCHPOINT_SIZE = 20;
 const NORMAL = 0;
 const CREATE_CONSTELLATION = 1;
 
 let angleThreshold = 5;
-
+let distanceThreshold = 350;
 let clusterKey = 0;
 
 let state = NORMAL;
@@ -43,6 +42,8 @@ document.getElementById('decompose').addEventListener('touchstart', () => {
 
 document.getElementById('increase-angle-threshold').addEventListener('touchstart', increaseAngleThreshold);
 document.getElementById('decrease-angle-threshold').addEventListener('touchstart', decreaseAngleThreshold);
+document.getElementById('increase-distance-threshold').addEventListener('touchstart', increaseDistanceThreshold);
+document.getElementById('decrease-distance-threshold').addEventListener('touchstart', decreaseDistanceThreshold);
 
 const touchPoints = {};
 let clusters = [];
@@ -59,9 +60,21 @@ function decreaseAngleThreshold() {
     }
     updatePageData();
 }
+function increaseDistanceThreshold() {
+    distanceThreshold += 25;
+    updatePageData();
+}
+
+function decreaseDistanceThreshold() {
+    if (distanceThreshold > 0) {
+        distanceThreshold -= 25;
+    }
+    updatePageData();
+}
 
 function updatePageData() {
     document.getElementById('angle-threshold-value').innerHTML = angleThreshold;
+    document.getElementById('distance-threshold-value').innerHTML = distanceThreshold;
 }
 
 function updateTouchEvents(event) {
@@ -159,7 +172,7 @@ function findClusters() {
         possibleCluster.push(currentPoint);
 
         activePoints.forEach(point => {
-            if (Math.abs(currentPoint.x - point.x) <= CLUSTER_DISTANCE_MAX && Math.abs(currentPoint.y - point.y) <= CLUSTER_DISTANCE_MAX) {
+            if (Math.abs(currentPoint.x - point.x) <= distanceThreshold && Math.abs(currentPoint.y - point.y) <= distanceThreshold) {
                 possibleCluster.push(point);
             }
         });

@@ -24,10 +24,17 @@ body {
     position: relative;
 }
 
-.constellation-data {
+.create-constellation-data {
+    width: 25%;
+    float: left;
+    position: relative;
+}
+
+.known-constellations-area {
     width: 25%;
     float: right;
     position: relative;
+    text-align: center;
 }
 
 .configure {
@@ -38,7 +45,7 @@ body {
 
 .increase-decrease {
     width: 100%;
-    position: absolute;
+    position: relative;
 }
 
 .increase-decrease p {
@@ -76,6 +83,15 @@ body {
     height: 1px;
     background-color: var(--lineColor);
     transform-origin: bottom left;
+}
+
+.touch-area {
+    position: absolute;
+    height: 75%;
+    width: 75%;
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+    top: 25%;
 }
 
 #create-constellation-data {

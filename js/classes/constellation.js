@@ -3,6 +3,7 @@ class Constellation {
     constructor(points) {
         this.points = points;
         this.angles = decompose(this.points);
+        this.knownConstellationElement = this.drawToKnownConstellationsArea();
     }
 
 
@@ -32,6 +33,12 @@ class Constellation {
             }
         });
         return count === 3;
+    }
+
+    drawToKnownConstellationsArea() {
+        const element = document.createElement('div');
+        const parent = document.getElementById('known-constellations-area');
+        return null;
     }
 
 }

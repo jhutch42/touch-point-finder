@@ -21,7 +21,7 @@ class Cluster {
         this.center = this.getCenter();
         this.width = this.getWidth();
 
-        if (this.width < CLUSTER_DISTANCE_MAX) {
+        if (this.width < distanceThreshold) {
             this.height = this.getHeight();
             this.left = this.edgeValues.minX;
             this.top = this.edgeValues.minY;
@@ -31,7 +31,7 @@ class Cluster {
             this.destroy();
         }
 
-        return this.width < CLUSTER_DISTANCE_MAX;
+        return this.width < distanceThreshold;
 
     }
 

@@ -16,24 +16,28 @@
             <p>Current Clusters Detected: <span id="clusterDataEntry">0</span></p>
             <button id="create-constellation">Create Constellation</button>
         </div>
-
+        <div class="create-constellation-data" id="create-constellation-data">
+                <p>Touch the table to create a constellation</p>
+                <p>Number of points in the constellation: <span id="number-of-points-in-constellation">0</span></p>
+                <button id="decompose">Save Constellation</button>
+        </div>
         <div class="configure">
             <div class="increase-decrease" id="angle-threshold">
                 <p>Angle Comparison Value: <span id="angle-threshold-value">0</span></p><button
                     id="decrease-angle-threshold">-</button><button id="increase-angle-threshold">+</button>
             </div>
-        </div>
-        <div class="constellation-data">
-            <div id="create-constellation-data">
-                <p>Touch the table to create a constellation</p>
-                <p>Number of points in the constellation: <span id="number-of-points-in-constellation">0</span></p>
-                <button id="decompose">Save Constellation</button>
+            <div class="increase-decrease" id="distance-threshold">
+                <p>Max Cluster Distance: <span id="distance-threshold-value">0</span></p>
+                <button id="decrease-distance-threshold">-</button>
+                <button id="increase-distance-threshold">+</button>
             </div>
-
         </div>
     </div>
     <div id="touch-area" class="touch-area">
 
+    </div>
+    <div id="known-constellations-area"  class="known-constellations-area">
+        <h3>Known Constellations</h3>
     </div>
     <script src="js/classes/touchPoint.js"></script>
     <script src="js/classes/cluster.js"></script>
