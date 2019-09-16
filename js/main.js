@@ -31,6 +31,11 @@ document.addEventListener('touchend', (event) => {
 document.getElementById('create-constellation').addEventListener('touchstart', createConstellation);
 document.getElementById('decompose').addEventListener('touchstart', () => {
     decomposeConstellation();
+
+    if (state === CREATE_CONSTELLATION) {
+        document.getElementById('create-constellation-data').style.display = 'none';
+        state = NORMAL;
+    }
 });
 
 const touchPoints = {};
@@ -262,11 +267,6 @@ function getClusterByKey(key) {
 
 function decompose(input) {
 
-    if (state === CREATE_CONSTELLATION) {
-        document.getElementById('create-constellation-data').style.display = 'none';
-        state = NORMAL;
-    }
-    
     if (input.length === 3) {
         let tempAngles = [];
 
