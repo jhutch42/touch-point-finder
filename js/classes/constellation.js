@@ -7,8 +7,9 @@ class Constellation {
 
 
     compare(points) {
-        console.log(points);
+
         const anglesB = decompose(points);
+        console.log(anglesB);
         let found = null;
         anglesB.forEach(element => {
             found = false;
