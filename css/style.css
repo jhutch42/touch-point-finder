@@ -90,9 +90,8 @@ body {
 
 .touch-area {
     position: absolute;
-    height: 75%;
+    height: 100%;
     width: 75%;
-    top: 25%;
 }
 
 .known-cluster-box {
