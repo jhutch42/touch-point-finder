@@ -211,11 +211,15 @@ function decomposeConstellation() {
 
 function findMatch(cluster) {
     clusters.forEach(cluster => {
+        let foundMatch = false;
         constellations.forEach(constellation => {
-            if (constellation.compare(cluster.points)) {
-                cluster.circleElement.style.borderColor = 'green';
-            } else {
-                cluster.circleElement.style.borderColor = 'orange';
+            if (!foundMatch) {
+                if (constellation.compare(cluster.points)) {
+                    cluster.circleElement.style.borderColor = 'green';
+                    foundMatch = true;
+                } else {
+                    cluster.circleElement.style.borderColor = 'orange';
+                }
             }
         });
     });
