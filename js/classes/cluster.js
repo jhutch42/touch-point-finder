@@ -137,10 +137,8 @@ class Cluster {
     }
 
     destroy() {
-        console.log(this.clusterKey);
         this.lines.forEach(line => line.style.display = 'none');
         this.circleElement.style.display = 'none';
-        console.log(this.lines);
         this.points.forEach(point => {
             if (point !== undefined) {
                 point.clusterMember = false;

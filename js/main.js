@@ -26,12 +26,11 @@ document.addEventListener('touchend', (event) => {
     removeTouches(event.changedTouches);
     printTouchLength(event);
     evaluateTouchData(event);
-    console.log(clusters);
 }, { passive: false });
 
 document.getElementById('create-constellation').addEventListener('touchstart', createConstellation);
 document.getElementById('decompose').addEventListener('touchstart', () => {
-    decomposeConstellation(clusters[0]);
+    decomposeConstellation();
 });
 
 const touchPoints = {};
@@ -95,11 +94,12 @@ function evaluateTouchData(event) {
     printTouchLength(event);
     drawTouchPoints();
     findClusters();
+    findMatch();
 }
 
 function findDeadPoints(touches) {
     if (touches.length !== Object.keys(touchPoints).length) {
-        console.log('dead');
+        console.log('dead points');
     }
 }
 
@@ -152,12 +152,13 @@ function findClusters() {
 
 
     document.getElementById('clusterDataEntry').innerHTML = clusters.length;
+
     if (state === CREATE_CONSTELLATION) {
         const button = document.getElementById('decompose');
         const display = document.getElementById('number-of-points-in-constellation');
-        if (clusters.length === 1) {
+        if (clusters.length > 0) {
             button.style.display = 'block';
-            display.innerHTML = Object.keys(clusters[0].points).length;
+            display.innerHTML = clusters.length;
         } else {
             button.style.display = 'none';
             display.innerHTML = 0;
@@ -165,48 +166,20 @@ function findClusters() {
     }
 }
 
-function decomposeConstellation(cluster) {
-    let angles = [];
-
-    Object.values(cluster.points).forEach((point, index) => {
-        for (let i = 0; i < Object.keys(cluster.points).length; i++) {
-            let pointA = getTouchPointByIdentifier(point);
-            if (i !== index) {
-                let pointB = getTouchPointByIdentifier(cluster.points[i]);
-                angles.push({
-                    main: index,
-                    sub: i,
-                    theta: getThetaRaw(getXDistance(pointA, pointB), getYDistance(pointA, pointB))
-                });
-            }
-        }
-    });
-
-
-    if (state === CREATE_CONSTELLATION) {
-        constellations.push(angles);
-        state = NORMAL;
-        document.getElementById('create-constellation-data').style.display = 'none';
-    } else {
-        findMatch(angles, cluster);
-    }
+function decomposeConstellation() {
+    clusters.forEach(cluster => constellations.push(new Constellation(cluster.points)));
 }
 
-function findMatch(angles, cluster) {
-
-    if (constellations.length > 0) {
+function findMatch(cluster) {
+    clusters.forEach(cluster => {
         constellations.forEach(constellation => {
-            let match = true;
-            Object.values(angles).forEach(angleA => {
-                if (!containsAngle(constellation, angleA)) {
-                    match = false;
-                }
-            });
-            if (match) {
+            if (constellation.compare(cluster.points)) {
                 cluster.circleElement.style.borderColor = 'green';
+            } else {
+                cluster.circleElement.style.borderColor = 'orange';
             }
         });
-    }
+    });
 }
 
 
@@ -256,11 +229,6 @@ function getTheta(adjacent, opposite, quadrant) {
     return radToDegrees(theta);
 }
 
-function getThetaRaw(adjacent, opposite) {
-    // tangent of opposite over adjacent
-    return radToDegrees(Math.atan(opposite / adjacent));
-}
-
 function radToDegrees(theta) {
     return theta * 180 / Math.PI;
 }
@@ -290,5 +258,33 @@ function getClusterByKey(key) {
         }
     });
     return result;
+}
+
+function decompose(input) {
+    if (input.length === 3) {
+        let tempAngles = [];
+
+        const points = JSON.parse(JSON.stringify(input));
+        let theta = null;
+
+        points.forEach(pointA => {
+            points.forEach(pointB => {
+                if (pointA.identifier !== pointB.identifier) {
+                    const xDistance = getXDistance(pointA, pointB);
+                    const yDistance = getYDistance(pointA, pointB);
+                    theta = getTheta(xDistance, yDistance, getQuadrant(pointA, pointB));
+                    tempAngles.push({ a: pointA.identifier, ax: pointA.x, b: pointB.identifier, bx: pointB.x, theta: theta });
+                }
+            });
+        });
+
+        tempAngles = tempAngles.sort((a, b) => (a.x > b.x) ? 1 : -1);
+        let tempAngles2 = [];
+        for (let i = 0; i < tempAngles.length; i += 2) {
+            tempAngles2.push(Math.abs(tempAngles[i].theta - tempAngles[i+1].theta));
+        }
+        return tempAngles2;
+       
+    }
 }
 
