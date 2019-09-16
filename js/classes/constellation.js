@@ -32,13 +32,45 @@ class Constellation {
                 count++;
             }
         });
+
+        if (count === 3) {
+            this.knownConstellationElement.style.borderColor = 'green';
+        } else {
+            this.knownConstellationElement.style.borderColor = 'black';
+        }
         return count === 3;
     }
 
     drawToKnownConstellationsArea() {
         const element = document.createElement('div');
         const parent = document.getElementById('known-constellations-area');
-        return null;
+        element.className = 'known-cluster-box';
+        parent.appendChild(element);
+
+        this.points.forEach(point => {
+            const pointElement = document.createElement('div');
+            pointElement.className = 'touchpoint';
+            const position = this.scalePoint(element.getBoundingClientRect(), point);
+            element.appendChild(pointElement);
+            pointElement.style.left = `${position.x}px`;
+            pointElement.style.top = `${position.y}px`;
+            pointElement.style.width = 5 + 'px';
+            pointElement.style.height = 5 + 'px';
+        });
+        return element;
+    }
+
+    scalePoint(parentBounds, point) {
+        const maxWidth = window.innerWidth;
+        const maxHeight = window.innerHeight;
+        const boxWidth = parentBounds.width;
+        const boxHeight = parentBounds.height;
+        const widthPercentage = boxWidth / maxWidth;
+        const heightPercentage = boxHeight / maxHeight;
+        const x = point.x * widthPercentage;
+        const y = point.y * heightPercentage;
+
+        return {x: x, y: y};
     }
 
 }
