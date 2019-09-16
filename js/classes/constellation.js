@@ -34,9 +34,9 @@ class Constellation {
         });
 
         if (count === 3) {
-            this.knownConstellationElement.style.borderColor = 'green';
+            this.knownConstellationElement.style.backgroundColor = 'green';
         } else {
-            this.knownConstellationElement.style.borderColor = 'black';
+            this.knownConstellationElement.style.backgroundColor = 'white';
         }
         return count === 3;
     }
